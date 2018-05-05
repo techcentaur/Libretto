@@ -19,10 +19,11 @@ optional arguments:
 ```
 
 #### Interpreter Usage
-
+```python3
 >>> from cleanse import Clean
 >>> c = Clean(['ankit', 'solanki'])
 >>> c
 <cleanse.Clean object at 0x7f1de940dda0>
+```
 
 #### Functional Usage
