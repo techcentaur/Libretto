@@ -7,6 +7,8 @@ from nltk.corpus import stopwords
 class Clean:
 	def __init__(self, tokens):
 		self.tokens = tokens
+		for i in range(0, len(self.tokens)):
+			self.tokens[i] = self.tokens[i].lower()
 
 	def apostrophe_normalisation(self):
 		text = " ".join(words)
@@ -58,7 +60,16 @@ if __name__=="__main__":
 	text = text.replace("\r","")
 
 	text_list = text.split(" ")
+	for i in range(0, len(text_list)):
+		if text_list[i].endswith('.'):
+			text_list[i] = text_list[i][:-1]
+	for i in range(0, len(text_list)):
+		if text_list[i].endswith('?'):
+			text_list[i] = text_list[i][:-1]
+
+	text_list = list(filter(None, text_list)) 
 
 	clean = Clean(text_list)
 
 	l = clean.punctuation_remove()
+	print(l)
