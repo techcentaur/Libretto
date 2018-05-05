@@ -1,4 +1,4 @@
-import argparse, nltk
+import re, argparse, nltk
 from lyrics import Scraper
 from string import punctuation
 from nltk.tokenize import RegexpTokenizer
@@ -11,7 +11,8 @@ class Clean:
 			self.tokens[i] = self.tokens[i].lower()
 
 	def apostrophe_normalisation(self):
-		text = " ".join(words)
+		
+		text = " ".join(self.tokens)
 		text = re.sub(r"n\'t", " not", text)
 		text = re.sub(r"\'re", " are", text)
 		text = re.sub(r"\'s", " is", text)
@@ -21,8 +22,8 @@ class Clean:
 		text = re.sub(r"\'ve", " have", text)
 		text = re.sub(r"\'m", " am", text)
 
-		w = ntlk.word_tokenize(text)
-		return w
+		self.tokens = nltk.word_tokenize(text)
+		return self.tokens
 
 
 	def stopwords_remove(self):		
@@ -30,6 +31,7 @@ class Clean:
 		stopwords = set(stopwords.words('english'))
 
 		clean_tokens = [x for x in toks if not x in stopwords]
+		self.tokens = clean_tokens
 		return clean_tokens
 
 
@@ -41,6 +43,7 @@ class Clean:
 			if i in punc_list:
 				clean_tokens.remove(i)
 		
+		self.tokens = clean_tokens
 		return clean_tokens
 
 
@@ -71,5 +74,7 @@ if __name__=="__main__":
 
 	clean = Clean(text_list)
 
-	l = clean.punctuation_remove()
+	clean.punctuation_remove()
+	l = clean.apostrophe_normalisation()
+
 	print(l)
