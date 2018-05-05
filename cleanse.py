@@ -1,8 +1,11 @@
 import re, argparse, nltk
 from lyrics import Scraper
+from scan import Scan
 from string import punctuation
-from nltk.tokenize import RegexpTokenizer
+from nltk import pos_tag
 from nltk.corpus import stopwords
+from nltk.tokenize import RegexpTokenizer
+from nltk.stem import WordNetLemmatizer
 
 class Clean:
 	def __init__(self, tokens):
@@ -35,6 +38,21 @@ class Clean:
 		self.tokens = nltk.word_tokenize(text)
 		return self.tokens
 
+	def normalize(self):
+		lem = WordNetLemmatizer()
+		clean_tokens = self.tokens
+
+		for (w,t) in pos_tag(clean_tokens):
+			wt = t[0].lower()
+			
+			wt = [wt if wt in ['a','r','n','v'] else None]
+			
+			wnew = lem.lemmatize(w,wt) if wt else None
+			clean_tokens.remove(w)
+			clean_tokens.append(wnew)
+
+		self.tokens = clean_tokens
+		return clean_tokens
 
 	def stopwords_remove(self):		
 		toks = self.tokens
@@ -88,4 +106,13 @@ if __name__=="__main__":
 	clean.apostrophe_normalisation()
 	clean.idiosyncracies_remove()
 
-	print(clean.tokens)
+	string = ". ".join(clean.tokens)
+	file = open('testing.txt', 'w')
+
+	file.write(string)
+	file.close()
+
+	s = Scan("testing.txt")
+	sl = s.calculate_summary(int(input("[*] How much lines..."))) 
+
+	print(sl)
