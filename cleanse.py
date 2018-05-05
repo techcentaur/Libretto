@@ -10,6 +10,16 @@ class Clean:
 		for i in range(0, len(self.tokens)):
 			self.tokens[i] = self.tokens[i].lower()
 
+	def idiosyncracies_remove(self):
+		raw = " ".join(self.tokens)
+
+		raw = raw.replace('[','<')
+		raw = raw.replace(']','>')
+		raw = re.sub('<[^>]+>','',raw)
+
+		self.tokens = nltk.word_tokenize(raw)
+		return self.tokens
+
 	def apostrophe_normalisation(self):
 		
 		text = " ".join(self.tokens)
@@ -75,6 +85,7 @@ if __name__=="__main__":
 	clean = Clean(text_list)
 
 	clean.punctuation_remove()
-	l = clean.apostrophe_normalisation()
+	clean.apostrophe_normalisation()
+	clean.idiosyncracies_remove()
 
-	print(l)
+	print(clean.tokens)
