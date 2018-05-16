@@ -1,13 +1,12 @@
 import re, argparse, nltk
 from lyrics import Scraper
-from scan import Scan
 from string import punctuation
 from nltk import pos_tag
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
 
-class Clean:
+class Libretto:
 	def __init__(self, tokens):
 		self.tokens = tokens
 		for i in range(0, len(self.tokens)):
@@ -76,7 +75,7 @@ class Clean:
 
 
 if __name__=="__main__":
-	parser = argparse.ArgumentParser(description='Libretto: Analyse songs you like, get results you dont')
+	parser = argparse.ArgumentParser(description='Libretto: Analyse songs you like, get results you don\'t.')
 	
 	parser.add_argument('-s', "--song", help="song name", type=str)
 	parser.add_argument('-S', "--singer", help="singer name", type=str)
@@ -100,19 +99,14 @@ if __name__=="__main__":
 
 	text_list = list(filter(None, text_list)) 
 
-	clean = Clean(text_list)
+	lib = Libretto(text_list)
 
-	clean.punctuation_remove()
-	clean.apostrophe_normalisation()
-	clean.idiosyncracies_remove()
+	lib.punctuation_remove()
+	lib.apostrophe_normalisation()
+	lib.idiosyncracies_remove()
 
-	string = ". ".join(clean.tokens)
+	string = " ".join(lib.tokens)
 	file = open('testing.txt', 'w')
 
 	file.write(string)
 	file.close()
-
-	s = Scan("testing.txt")
-	sl = s.calculate_summary(int(input("[*] How much lines..."))) 
-
-	print(sl)
