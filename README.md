@@ -1,15 +1,25 @@
 # Libretto
 Analyse songs you like, get results you don't. Works through NLP.
 
+## Implementation Aim
+
+- Language guessing of lyrics and title
+- Structure extraction; get verses and choruses
+- Name, entity and place recognition used in lyrics
+- Theme categorization (e.g. happy | sad)
+- Figure of speech detection (certain FoS's)
+
+
+
 ## Usage
 
 #### Help Usage
 
 ```console
-gavy42@jarvis:~/Desktop/github/Libretto$ python3 cleanse.py -h
-usage: cleanse.py [-h] [-s SONG] [-S SINGER]
+gavy42@jarvis:~/Desktop/github/Libretto$ python3 app.py -h
+usage: app.py [-h] [-s SONG] [-S SINGER]
 
-Libretto: Analyse songs you like, get results you dont
+Libretto: Analyse songs you like, get results you don't.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -20,9 +30,10 @@ optional arguments:
 
 #### Interpreter Usage
 
->>> from cleanse import Clean
->>> c = Clean(['ankit', 'solanki'])
->>> c
-<cleanse.Clean object at 0x7f1de940dda0>
+>>> from app import Libretto
+>>> l = Libretto(['ankit', 'solanki'])
+>>> l
+<app.Libretto object at 0x7f1de940dda0>
 
 #### Functional Usage
+
