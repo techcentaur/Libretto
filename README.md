@@ -1,15 +1,13 @@
 # Libretto
 Analyse songs you like, get results you don't. Works through NLP.
 
-## Implementation Aim
+## Implementation Aims
 
 - Language guessing of lyrics and title
 - Structure extraction; get verses and choruses
 - Name, entity and place recognition used in lyrics
 - Theme categorization (e.g. happy | sad)
 - Figure of speech detection (certain FoS's)
-
-
 
 ## Usage
 
@@ -30,10 +28,11 @@ optional arguments:
 
 #### Interpreter Usage
 
+```python3
 >>> from app import Libretto
->>> l = Libretto(['ankit', 'solanki'])
->>> l
+>>> lib = Libretto(['ankit', 'solanki'])
+>>> lib
 <app.Libretto object at 0x7f1de940dda0>
+```
 
 #### Functional Usage
-
