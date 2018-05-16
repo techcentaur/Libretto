@@ -1,4 +1,4 @@
-import re, argparse, nltk
+import re, argparse, nltk, googletrans
 from lyrics import Scraper
 from string import punctuation
 from nltk import pos_tag
@@ -7,35 +7,36 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
 
 class Libretto:
-	def __init__(self, tokens):
-		self.tokens = tokens
-		for i in range(0, len(self.tokens)):
-			self.tokens[i] = self.tokens[i].lower()
+	def __init__(self, text):
+		self.text = text
+		# self.tokens = nltk.word_tokenize(text)
+		# for i in range(0, len(self.tokens)):
+		# 	self.tokens[i] = self.tokens[i].lower()
 
 	def idiosyncracies_remove(self):
-		raw = " ".join(self.tokens)
+		raw = self.text
 
 		raw = raw.replace('[','<')
 		raw = raw.replace(']','>')
 		raw = re.sub('<[^>]+>','',raw)
 
-		self.tokens = nltk.word_tokenize(raw)
-		return self.tokens
+		return raw
 
 	def apostrophe_normalisation(self):
 		
-		text = " ".join(self.tokens)
-		text = re.sub(r"n\'t", " not", text)
-		text = re.sub(r"\'re", " are", text)
-		text = re.sub(r"\'s", " is", text)
-		text = re.sub(r"\'d", " would", text)
-		text = re.sub(r"\'ll", " will", text)
-		text = re.sub(r"\'t", " not", text)
-		text = re.sub(r"\'ve", " have", text)
-		text = re.sub(r"\'m", " am", text)
+		raw = self.text
+		raw = re.sub(r"n\'t", " not", raw)
+		raw = re.sub(r"\'re", " are", raw)
+		raw = re.sub(r"\'s", " is", raw)
+		raw = re.sub(r"\'d", " would", raw)
+		raw = re.sub(r"\'ll", " will", raw)
+		raw = re.sub(r"\'t", " not", raw)
+		raw = re.sub(r"\'ve", " have", raw)
+		raw = re.sub(r"\'m", " am", raw)
+		raw = re.sub(r"\'cause", "because", raw)
+		raw = re.sub(r"\'Cause", "Because", raw)
 
-		self.tokens = nltk.word_tokenize(text)
-		return self.tokens
+		return raw
 
 	def normalize(self):
 		lem = WordNetLemmatizer()
@@ -74,39 +75,51 @@ class Libretto:
 		return clean_tokens
 
 
+	def langauage_detection(self):
+		translator = googletrans.Translator()
+		l = translator.detect(self.text)
+
+		return [l.lang, l.confidence]
+
+	def para_to_string(self):
+		raw = self.text
+
+		raw = raw.replace('\n\n\n', '. ')
+		raw = raw.replace('\n\n', '. ')
+		raw = raw.replace('\n', '. ')
+
+		return raw
+
+	def cleanse_lyrics(self):
+		raw = self.text
+
+		raw = self.idiosyncracies_remove()
+		self.text = raw
+
+		raw = self.apostrophe_normalisation()
+		self.text = raw
+		
+		raw = self.para_to_string()
+		self.text = raw
+		return raw
+
+
+
 if __name__=="__main__":
 	parser = argparse.ArgumentParser(description='Libretto: Analyse songs you like, get results you don\'t.')
 	
 	parser.add_argument('-s', "--song", help="song name", type=str)
 	parser.add_argument('-S', "--singer", help="singer name", type=str)
+	parser.add_argument('-q', "--quiet", help="quieter analysing", action='store_true')
 	args = parser.parse_args()
 
 	scraper = Scraper(args.song, args.singer)
 	lyrics = scraper.get_lyrics()
 
-	text = lyrics[0]
-	text = text.replace("\n",". ")
-	text = text.replace("\t","")
-	text = text.replace("\r","")
+	lib = Libretto(lyrics[0])
+	lib.cleanse_lyrics()
 
-	text_list = text.split(" ")
-	for i in range(0, len(text_list)):
-		if text_list[i].endswith('.'):
-			text_list[i] = text_list[i][:-1]
-	for i in range(0, len(text_list)):
-		if text_list[i].endswith('?'):
-			text_list[i] = text_list[i][:-1]
+	lang = lib.langauage_detection()
 
-	text_list = list(filter(None, text_list)) 
-
-	lib = Libretto(text_list)
-
-	lib.punctuation_remove()
-	lib.apostrophe_normalisation()
-	lib.idiosyncracies_remove()
-
-	string = " ".join(lib.tokens)
-	file = open('testing.txt', 'w')
-
-	file.write(string)
-	file.close()
+	if not args.quiet:
+		print("[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]")
