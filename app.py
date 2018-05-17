@@ -90,19 +90,40 @@ class Libretto:
 
 		return raw
 
-	def cleanse_lyrics(self):
+	def cleanse_lyrics(self, quiet):
 		raw = self.text
 
+		if not quiet:
+			print('[!] Idiosyncracies removed like [Chorus]: [Verse]: ...')
 		raw = self.idiosyncracies_remove()
 		self.text = raw
 
+		if not quiet:
+			print('[!] Normalising words - apostrophe removal ...')
 		raw = self.apostrophe_normalisation()
 		self.text = raw
 		
+		if not quiet:
+			print('[!] Creating lyrical-verses to string ...')
 		raw = self.para_to_string()
 		self.text = raw
 		return raw
 
+	def NER(self):
+		raw = self.text
+		ner = []
+
+		for sent in nltk.sent_tokenize(raw):
+			for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
+				if hasattr(chunk, 'label'):
+					ner.append((chunk.label(), ' '.join(c[0] for c in chunk)))
+
+		entityrecognition = {'FACILITY':[], 'GPE':[], 'GSP':[], 'LOCATION':[], 'ORGANIZATION':[], 'PERSON':[] }
+
+		for i in ner:			
+			entityrecognition[(i[0])].append(i[1])
+
+		return entityrecognition
 
 
 if __name__=="__main__":
@@ -113,13 +134,22 @@ if __name__=="__main__":
 	parser.add_argument('-q', "--quiet", help="quieter analysing", action='store_true')
 	args = parser.parse_args()
 
+	if not args.quiet:
+		print('[*] Scraping the lyrics of', args.song,'...\n')
+
 	scraper = Scraper(args.song, args.singer)
 	lyrics = scraper.get_lyrics()
 
 	lib = Libretto(lyrics[0])
-	lib.cleanse_lyrics()
-
-	lang = lib.langauage_detection()
+	lib.cleanse_lyrics(args.quiet)
 
 	if not args.quiet:
-		print("[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]")
+		print('[!] Detecting language ...')
+		lang = lib.langauage_detection()
+		print("\n[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]\n")
+	
+	if not args.quiet:
+		print('[!] Named entity recognition on lyrics ...')
+		entitydict = lib.NER()
+		print('[*] Printing NER: ', entitydict)
+
