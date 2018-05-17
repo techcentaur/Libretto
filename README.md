@@ -3,9 +3,9 @@ Analyse songs you like, get results you don't. Works through NLP.
 
 ## Implementation Aims
 
-- Language guessing of lyrics and title
-- Structure extraction; get verses and choruses
-- Name, entity and place recognition used in lyrics
+- Language guessing of lyrics and title - **CHECK**
+- Structure extraction; get verses and choruses (chorus: repeating words)
+- Name, entity and place recognition used in lyrics - **CHECK**
 - Theme categorization (e.g. happy | sad)
 - Figure of speech detection (certain FoS's)
 
