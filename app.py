@@ -1,11 +1,17 @@
-import re, argparse, nltk, googletrans
+import re
+import json
+import nltk
+import argparse
+import googletrans
+
+from scan import Scan
 from lyrics import Scraper
 from string import punctuation
+
 from nltk import pos_tag
 from nltk.corpus import stopwords
-from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
-from scan import Scan
+from nltk.tokenize import RegexpTokenizer
 
 class Libretto:
 	def __init__(self, text):
@@ -148,11 +154,19 @@ if __name__=="__main__":
 	parser.add_argument('-s', "--song", help="song name", type=str)
 	parser.add_argument('-S', "--singer", help="singer name", type=str)
 	parser.add_argument('-q', "--quiet", help="quieter analysing", action='store_true')
-	parser.add_argument('--list', default='terminal', choices=['terminal', 'json'], help='terminal: stdout; json: save in JSON format')	
+	parser.add_argument('-l', '--list', default='terminal', choices=['terminal', 'json'], help='terminal: stdout; json: save in JSON format')	
 	args = parser.parse_args()
+
+	if args.list == 'json':
+		args.quiet = True
+		is_json = True
+	else:
+		is_json = False
 
 	if not args.quiet:
 		print('[!] Scraping the lyrics of', args.song, 'by', args.singer, '...\n')
+
+	lib_dict = {}
 
 	scraper = Scraper(args.song, args.singer)
 	lyrics = scraper.get_lyrics()
@@ -167,21 +181,34 @@ if __name__=="__main__":
 
 	lang = lib.langauage_detection()
 	
-	print("\n[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]\n")
+	if not is_json:
+		print("\n[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]\n")
+	else:
+		lib_dict['language'] = {'language': lang[0], 'confidence': lang[1]}
 
 	if not args.quiet:
 		print('[!] Named entity recognition on lyrics ...\n')
 
 	entitydict = lib.NER()
 
-	print('[*] Named Entity Recognition: ', entitydict,'\n')
+	if not is_json:
+		print('[*] Named Entity Recognition: ', entitydict,'\n')
+	else:
+		lib_dict['NER'] = entitydict
 
 	if not args.quiet:
 		print('[!] Summarising song ...')
 
 	summ = lib.summarise()
-	print('\n[*] Summary of', args.song, ':')
-	for i in range(0, len(summ)):
-		print(str(i) + ". ", summ[i])
+	if not is_json:
+		print('\n[*] Summary of', args.song, ':')
+		for i in range(0, len(summ)):
+			print(str(i) + ". ", summ[i])
+	else:
+		lib_dict['summary'] = summ
 
 	lib.write_infile()
+
+	if is_json:
+		with open("_" + args.song + "_libretto.json", 'w') as outfile:
+			json.dump(lib_dict, outfile, indent=4)			
