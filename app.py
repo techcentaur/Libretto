@@ -131,7 +131,16 @@ class Libretto:
 
 		summarylist = scanobj.calculate_summary(5)
 
-		print(summarylist)
+		return summarylist
+
+	def write_infile(self):
+		file = open('song_data.txt', 'w')
+
+		file.write(self.text)
+		file.close()
+
+		return True
+
 
 if __name__=="__main__":
 	parser = argparse.ArgumentParser(description='Libretto: Analyse songs you like, get results you don\'t.')
@@ -146,6 +155,8 @@ if __name__=="__main__":
 
 	scraper = Scraper(args.song, args.singer)
 	lyrics = scraper.get_lyrics()
+
+	scraper.write_infile(lyrics)
 
 	lib = Libretto(lyrics[0])
 	lib.cleanse_lyrics(args.quiet)
@@ -169,3 +180,10 @@ if __name__=="__main__":
 	if not args.quiet:
 		print('[!] Summarising song ...')
 
+	summ = lib.summarise()
+	if not args.quiet:
+		print('\n[*] Summary of the song:')
+		for i in range(0, len(summ)):
+			print(str(i) + ". ", summ[i])
+
+	lib.write_infile()
