@@ -1,3 +1,4 @@
-argparse
+re
 nltk
+argparse
 googletrans
