@@ -42,3 +42,23 @@ After creating the instance of the class Libretto as `Libretto(<text_string>)`; 
 - `cleanse_lyrics(<args.quiet>)` : Returns clean lyrics
 	- `idiosyncracies_remove()`
 	- `apostrophe_normalisation()`
+
+## JSON format datafile
+
+```json
+{
+    "language": {
+        "language": "",
+        "confidence":
+    },
+    "NER": {
+        "FACILITY": [],
+        "GPE": [],
+        "GSP": [],
+        "LOCATION": [],
+        "ORGANIZATION": [],
+        "PERSON": []
+    },
+    "summary": []
+}
+```
