@@ -148,10 +148,11 @@ if __name__=="__main__":
 	parser.add_argument('-s', "--song", help="song name", type=str)
 	parser.add_argument('-S', "--singer", help="singer name", type=str)
 	parser.add_argument('-q', "--quiet", help="quieter analysing", action='store_true')
+	parser.add_argument('--list', default='terminal', choices=['terminal', 'json'], help='terminal: stdout; json: save in JSON format')	
 	args = parser.parse_args()
 
 	if not args.quiet:
-		print('[*] Scraping the lyrics of', args.song,'...\n')
+		print('[!] Scraping the lyrics of', args.song, 'by', args.singer, '...\n')
 
 	scraper = Scraper(args.song, args.singer)
 	lyrics = scraper.get_lyrics()
@@ -165,25 +166,22 @@ if __name__=="__main__":
 		print('[!] Detecting language ...')
 
 	lang = lib.langauage_detection()
+	
+	print("\n[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]\n")
 
 	if not args.quiet:
-		print("\n[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]\n")
-
-	if not args.quiet:
-		print('[!] Named entity recognition on lyrics ...')
+		print('[!] Named entity recognition on lyrics ...\n')
 
 	entitydict = lib.NER()
 
-	if not args.quiet:
-		print('\n[*] Printing NER: ', entitydict,'\n')
+	print('[*] Named Entity Recognition: ', entitydict,'\n')
 
 	if not args.quiet:
 		print('[!] Summarising song ...')
 
 	summ = lib.summarise()
-	if not args.quiet:
-		print('\n[*] Summary of the song:')
-		for i in range(0, len(summ)):
-			print(str(i) + ". ", summ[i])
+	print('\n[*] Summary of', args.song, ':')
+	for i in range(0, len(summ)):
+		print(str(i) + ". ", summ[i])
 
 	lib.write_infile()
