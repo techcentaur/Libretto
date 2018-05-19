@@ -5,6 +5,7 @@ from nltk import pos_tag
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
+from scan import Scan
 
 class Libretto:
 	def __init__(self, text):
@@ -125,6 +126,12 @@ class Libretto:
 
 		return entityrecognition
 
+	def summarise(self):
+		scanobj = Scan(self.text)
+
+		summarylist = scanobj.calculate_summary(5)
+
+		print(summarylist)
 
 if __name__=="__main__":
 	parser = argparse.ArgumentParser(description='Libretto: Analyse songs you like, get results you don\'t.')
@@ -145,11 +152,20 @@ if __name__=="__main__":
 
 	if not args.quiet:
 		print('[!] Detecting language ...')
-		lang = lib.langauage_detection()
+
+	lang = lib.langauage_detection()
+
+	if not args.quiet:
 		print("\n[*] Language:", lang[0],"[confidence:", str(lang[1]), "%]\n")
-	
+
 	if not args.quiet:
 		print('[!] Named entity recognition on lyrics ...')
-		entitydict = lib.NER()
-		print('[*] Printing NER: ', entitydict)
+
+	entitydict = lib.NER()
+
+	if not args.quiet:
+		print('\n[*] Printing NER: ', entitydict,'\n')
+
+	if not args.quiet:
+		print('[!] Summarising song ...')
 
