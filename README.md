@@ -1,12 +1,6 @@
 # Libretto
 Analyse songs you like, get results you don't. Works through NLP.
 
-## Implementation Aims Remaining
-
-- Structure extraction; get verses and choruses (chorus: repeating words)
-- Theme categorization (e.g. happy | sad)
-- Figure of speech detection (certain FoS's)
-
 ## Usage
 
 #### Help Usage
@@ -40,8 +34,8 @@ optional arguments:
 After creating the instance of the class Libretto as `Libretto(<text_string>)`; these functions are available as public to utilise.
 
 - `cleanse_lyrics(<args.quiet>)` : Returns clean lyrics
-	- `idiosyncracies_remove()`
-	- `apostrophe_normalisation()`
+  - `idiosyncracies_remove()`
+  - `apostrophe_normalisation()`
 
 ## JSON format datafile
 
@@ -62,3 +56,9 @@ After creating the instance of the class Libretto as `Libretto(<text_string>)`; 
     "summary": []
 }
 ```
+
+## Implementation Aims Remaining
+
+- Theme categorization using machine learning (language processing)
+- Genre classification using deep learning (audio analysis)
+- Structure extraction; get verses and choruses (chorus: repeating words)
