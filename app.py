@@ -4,9 +4,8 @@ import nltk
 import argparse
 import googletrans
 
-from scan import Scan
-from lyrics import Scraper
 from string import punctuation
+from python import scan, lyrics
 
 from nltk import pos_tag
 from nltk.corpus import stopwords
@@ -133,7 +132,7 @@ class Libretto:
 		return entityrecognition
 
 	def summarise(self):
-		scanobj = Scan(self.text)
+		scanobj = scan.Scan(self.text)
 
 		summarylist = scanobj.calculate_summary(5)
 
@@ -168,7 +167,7 @@ if __name__=="__main__":
 
 	lib_dict = {}
 
-	scraper = Scraper(args.song, args.singer)
+	scraper = lyrics.Scraper(args.song, args.singer)
 	lyrics = scraper.get_lyrics()
 
 	scraper.write_infile(lyrics)
