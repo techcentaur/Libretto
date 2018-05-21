@@ -33,14 +33,15 @@ class Scrapedata(object):
 
         lyrics_data = ""
 
-
         for i in list2:
-            lyrics = Scraper(i[0], i[1]).get_lyrics()
-            lyrics_data += lyrics[0]
+            try:
+                lyrics = Scraper(i[0], i[1]).get_lyrics()
+                lyrics_data += lyrics[0]
 
-            if not self.quiet:
-                print('[**] Lyrics scraped of', i[0],'by', i[1], '...')
-
+                if not self.quiet:
+                    print('[**] Lyrics scraped of', i[0],'by', i[1], '...')
+            except Exception:
+                pass
 
         clean_lyrics_data = Libretto(lyrics_data).cleanse_lyrics(True)
 
