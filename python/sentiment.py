@@ -9,9 +9,9 @@ from nltk.probability import FreqDist, ConditionalFreqDist
 
 
 class Sentiment:
-    def __init__(self, folder_name, execute):
-        self.folder_name = folder_name
-        self.execute = execute #['print', 'json']
+    def __init__(self, execute):
+        self.folder_name = '../dataset'
+        self.execute = execute.lower() # choices -> ['print', 'json']
 
     def feature_dict(self, words):
         return dict([(word, True) for word in words])
