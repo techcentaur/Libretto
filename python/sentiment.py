@@ -17,9 +17,9 @@ class Sentiment:
 
     def create_sets(self, featuredict):
 
-        categories_dict = {'sad': {'features':[], 'datapath': os.path.join(self.folder_name, 'sad')},
-                        'calm': {'features':[], 'datapath': os.path.join(self.folder_name, 'calm')},
-                        'energetic': {'features':[], 'datapath': os.path.join(self.folder_name, 'energetic')}}
+        categories_dict = {'sad': {'features':[], 'datapath': os.path.join(self.folder_name, 'sad'), 'cutoff': 0.0},
+                        'calm': {'features':[], 'datapath': os.path.join(self.folder_name, 'calm'), 'cutoff': 0.0},
+                        'energetic': {'features':[], 'datapath': os.path.join(self.folder_name, 'energetic'), 'cutoff': 0.0}}
 
         for key in categories_dict:
             with open(categories_dict[key][datapath], 'r') as datalist:
@@ -29,4 +29,11 @@ class Sentiment:
                     words = [featuredict(words), key]
                     categories_dict[key]['features'].append(words)
 
+        for key in categories_dict:
+            categories_dict[key]['cutoff'] = int(math.floor(len(categories_dict[key]['features']) * 0.75))
 
+        for key in categories_dict:
+            train_features.append((categories_dict[key]['features'])[:(categories_dict[key]['cutoff'])]) 
+            test_features.append((categories_dict[key]['features'])[(categories_dict[key]['cutoff']):]) 
+        
+        return {'train': train_features, 'test': test_features}
