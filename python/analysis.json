@@ -1,0 +1,17 @@
+{
+    "accuracy": 0.5595238095238095,
+    "sentiment": {
+        "sad": {
+            "precision": 0.5625,
+            "recall": 0.8571428571428571
+        },
+        "calm": {
+            "precision": 0.4,
+            "recall": 0.14285714285714285
+        },
+        "energetic": {
+            "precision": 0.7,
+            "recall": 0.5
+        }
+    }
+}
