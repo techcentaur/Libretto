@@ -1,6 +1,7 @@
 import re
 import os
 import math
+import json
 import argparse
 import itertools
 import collections
@@ -85,9 +86,9 @@ class Sentiment:
         else:
             data = {
                     'accuracy': nltk.classify.util.accuracy(classifier, data_dict['test']),
-                     'sentiment': {'sad': {'precision': nltk.metrics.precision(reference_set['sad'], test_set['sad']), 'recall': nltk.metrics.recall(reference_set['sad'], test_set['sad'])},
-                        'calm': {'precision': nltk.metrics.precision(reference_set['calm'], test_set['calm']), 'recall': nltk.metrics.recall(reference_set['calm'], test_set['calm'])},
-                        'energetic': {'precision': nltk.metrics.precision(reference_set['energetic'], test_set['energetic']), 'recall': nltk.metrics.recall(reference_set['energetic'], test_set['energetic'])}
+                     'sentiment': {'sad': {'precision': precision(reference_set['sad'], test_set['sad']), 'recall': recall(reference_set['sad'], test_set['sad'])},
+                        'calm': {'precision': precision(reference_set['calm'], test_set['calm']), 'recall': recall(reference_set['calm'], test_set['calm'])},
+                        'energetic': {'precision': precision(reference_set['energetic'], test_set['energetic']), 'recall': recall(reference_set['energetic'], test_set['energetic'])}
                         }
                     }
 
