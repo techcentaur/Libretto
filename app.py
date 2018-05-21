@@ -61,24 +61,26 @@ class Libretto:
 		return clean_tokens
 
 	def stopwords_remove(self):		
-		toks = self.tokens
+		rawtext = self.text
+		
+		tokens = nltk.word_tokenize(tokens)
 		stopwords = set(stopwords.words('english'))
 
 		clean_tokens = [x for x in toks if not x in stopwords]
-		self.tokens = clean_tokens
-		return clean_tokens
+		tokens = " ".join(clean_tokens)
+		return text
 
 
 	def punctuation_remove(self):
-		clean_tokens = self.tokens
+		clean_tokens = (self.text).split(" ")
 		punc_list = list(punctuation)
 
 		for i in clean_tokens:
 			if i in punc_list:
 				clean_tokens.remove(i)
 		
-		self.tokens = clean_tokens
-		return clean_tokens
+		text = " ".join(clean_tokens)
+		return text
 
 
 	def langauage_detection(self):
