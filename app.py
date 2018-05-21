@@ -147,6 +147,12 @@ class Libretto:
 		file.close()
 
 		return True
+	
+	@staticmethod
+	def structure_extraction(text):
+		templist = []
+		
+		pass 
 
 
 if __name__=="__main__":
